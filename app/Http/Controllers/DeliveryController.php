@@ -14,8 +14,8 @@ class DeliveryController extends Controller
         $result2 = $calculator->calculatePrice(1, 35, 25, 35);
         $result3 = $calculator->calculatePrice(1.5, 8, 15, 25, 1500);
 
-        echo "Result 1: " . print_r($result1, true) . "<br>";
-        echo "Result 2: " . print_r($result2, true) . "<br>";
-        echo "Result 3: " . print_r($result3, true) . "<br>";
+        var_dump($result1['price'], 'Метод: ', $result1['method']);
+        var_dump($result2['price'], 'Метод: ', $result2['method']);
+        var_dump($result3['price'], 'Метод: ', $result3['method']);
     }
 }
