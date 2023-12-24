@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('deliverycalculator', 'DeliveryController@index');
 Route::get('exchange', 'TestController@index');
+Route::get('context', 'ContextController@index');
