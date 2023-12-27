@@ -53,24 +53,8 @@ class ContextController extends Controller
         $secondStrategy = new SecondStrategy();
         $resultSecondStrategy = $context->formatData($secondStrategy);
 
-        foreach ($resultFirstStrategy as $value => $formattedObject) {
-            echo '<pre>';
-            var_dump($formattedObject);
-            echo '</pre>';
-            if ($value < count($resultFirstStrategy) - 1) {
-                echo '_______';
-            } else {
-                echo '<br>Second strategy<br>';
-            }
-        }
-
-        foreach ($resultSecondStrategy as $value => $formattedObject) {
-            echo '<pre>';
-            var_dump($formattedObject);
-            echo '</pre>';
-            if ($value < count($resultFirstStrategy) - 1) {
-                echo '_______';
-            }
-        }
+        echo '<pre>';
+        var_dump($firstStrategyResult = $firstStrategy->formatResult($resultFirstStrategy, 'FirstStrategy'));
+        var_dump($secondStrategyResult = $secondStrategy->formatResult($resultSecondStrategy, 'SecondStrategy'));
     }
 }

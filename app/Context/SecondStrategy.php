@@ -4,22 +4,18 @@ namespace App\Context;
 
 class SecondStrategy extends Strategy
 {
-    public function format($object) : array
+    protected function formatProperty(string $name, $value): string
     {
-        $formattedText = '' . PHP_EOL;
+        $formattedName = implode(' ', array_map(function ($word) {
+            return lcfirst($word);
+        }, preg_split('/(?=[A-Z])/', $name)));
 
-        foreach ($object as $property => $value) {
-            $propertyWords = implode(' ', array_map(function ($word) {
-                return lcfirst($word);
-            }, preg_split('/(?=[A-Z])/', $property)));
+        return "|$formattedName|$value|";
+    }
 
-            $formattedText .= '|' . $propertyWords . '|' . $value . '|' . PHP_EOL;
-        }
-
-        return [
-            'name' => 'secondstrategy_' . date('Y-m-d') . '.txt',
-            'text' => $formattedText,
-        ];
+    public function format(array $object): string
+    {
+        return $this->formatObject($object);
     }
 }
 

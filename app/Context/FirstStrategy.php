@@ -4,17 +4,13 @@ namespace App\Context;
 
 class FirstStrategy extends Strategy
 {
-    public function format($object) : array
+    protected function formatProperty(string $name, $value): string
     {
-        $formattedText = '' . PHP_EOL;
+        return "$name – $value";
+    }
 
-        foreach ($object as $property => $value) {
-            $formattedText .= $property . ' – ' . $value . PHP_EOL;
-        }
-
-        return [
-            'name' => 'firststrategy_' . date('Y-m-d') . '.txt',
-            'text' => $formattedText,
-        ];
+    public function format(array $object): string
+    {
+        return $this->formatObject($object);
     }
 }

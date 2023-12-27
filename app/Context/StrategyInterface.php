@@ -4,5 +4,6 @@ namespace App\Context;
 
 interface StrategyInterface
 {
-    public function format($object);
+    public function formatObject(array $object): string;
+    public function formatResult(array $result, string $strategyName): array;
 }
