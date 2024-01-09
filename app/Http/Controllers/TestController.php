@@ -11,6 +11,7 @@ class TestController extends Controller
     {
         $testClass = new CurrencyExchange;
         var_dump($testClass->setType('cash')->setCurrency("EUR")->execute());
+        echo '123';
         die();
     }
 }
