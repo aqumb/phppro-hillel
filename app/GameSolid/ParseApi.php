@@ -3,7 +3,7 @@
 namespace App\GameSolid;
 use GuzzleHttp\Client as GuzzleClient;
 
-class ParseApi
+class ParseApi implements ParseApiInterface
 {
     private $url;
 
@@ -16,6 +16,6 @@ class ParseApi
     {
         $guzzleClient = new GuzzleClient();
         $response = $guzzleClient->request('GET', $this->url . urlencode($search) . $excludePlaceIds);
-        return json_decode($response->getBody()->getContents());
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
