@@ -2,25 +2,32 @@
 
 namespace App\GameSolid;
 
-class FilterArray
+class FilterArray implements FilterArrayInterface
 {
     private $properties;
 
-    public function __construct($properties)
+    public function __construct($properties = [])
     {
-        $this->properties = $properties;
+        $this->properties = $properties ?? [];
     }
 
-    public function filter($places) : array
+    public function setProperties($properties): FilterArrayInterface
+    {
+        $this->properties = $properties ?? [];
+        return $this;
+    }
+
+    public function filter($places): array
     {
         $filteredPlaces = [];
         foreach ($places as $key => $place) {
-            foreach ($place as $prop => $val) {
+            $placeArray = (array) $place; // Приводим к массиву
+            foreach ($placeArray as $prop => $val) {
                 if (!in_array($prop, $this->properties)) {
-                    unset($place->$prop);
+                    unset($placeArray[$prop]);
                 }
             }
-            $filteredPlaces[$place->place_id] = $place;
+            $filteredPlaces[$placeArray['place_id']] = $placeArray;
         }
         return $filteredPlaces;
     }

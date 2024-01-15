@@ -10,9 +10,6 @@ RUN apt-get update && \
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
 # Set timezone to UTC
 RUN rm /etc/localtime
 RUN ln -s /usr/share/zoneinfo/UTC /etc/localtime

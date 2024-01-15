@@ -3,40 +3,54 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\GameSolid\ParseApi;
-use App\GameSolid\DistanceCalculation;
-use App\GameSolid\FilterArray;
-use App\GameSolid\SortDistance;
+use App\GameSolid\ParseApiInterface;
+use App\GameSolid\DistanceCalculationInterface;
+use App\GameSolid\FilterArrayInterface;
+use App\GameSolid\SortDistanceInterface;
 
 class HomeWorkSolidController extends Controller
 {
-    private $url = 'https://nominatim.openstreetmap.org/search.php?format=jsonv2&q=';
+    private $parseApi;
+    private $distanceCalculation;
+    private $filterArray;
+    private $sortDistance;
+
     private $search = 'Продукти Одеса';
-    private $exclude_place_ids = '';
+    private $excludePlaceIds = '';
     private $lat = 46.4774700;
     private $lon = 30.7326200;
     private $properties = ['place_id', 'name', 'display_name', 'distance'];
 
-    public function index(Request $request) : void
+    public function __construct(
+        ParseApiInterface $parseApi,
+        DistanceCalculationInterface $distanceCalculation,
+        FilterArrayInterface $filterArray,
+        SortDistanceInterface $sortDistance
+    )
+    {
+        $this->parseApi = $parseApi;
+        $this->distanceCalculation = $distanceCalculation;
+        $this->filterArray = $filterArray;
+        $this->sortDistance = $sortDistance;
+    }
+
+    public function index(Request $request)
     {
         while (true) {
-            $parseApiService = new ParseApi($this->url);
-            $places = $parseApiService->parse($this->search, $this->exclude_place_ids);
+            $places = $this->parseApi->parse($this->search, $this->excludePlaceIds);
 
-            $distanceCalculationService = new DistanceCalculation($this->lat, $this->lon);
-            $distanceCalculationService->calculate($places);
+            $this->distanceCalculation->setLat($this->lat);
+            $this->distanceCalculation->setLon($this->lon);
+            $this->distanceCalculation->calculate($places);
+            $this->sortDistance->sort($places);
 
-            $sortByDistanceService = new SortDistance();
-            $sortByDistanceService->sort($places);
+            $filteredPlaces = $this->filterArray->setProperties($this->properties)->filter($places);
 
-            $filterOutputArrayService = new FilterArray($this->properties);
-            $filteredPlaces = $filterOutputArrayService->filter($places);
-
-            if ($this->exclude_place_ids) {
+            if ($this->excludePlaceIds) {
                 dd($filteredPlaces);
             }
 
-            $this->exclude_place_ids = '&exclude_place_ids=' . urlencode(implode(',', array_keys($filteredPlaces)));
+            $this->excludePlaceIds = '&exclude_place_ids=' . urlencode(implode(',', array_keys($filteredPlaces)));
             dump($filteredPlaces);
         }
     }
